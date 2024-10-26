@@ -1,0 +1,42 @@
+/* src/styles/ProductTable.css */
+
+.product-table {
+    background-color: #FFFFFF;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  }
+  
+  .product-table table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .product-table th, .product-table td {
+    padding: 10px;
+    text-align: left;
+    border-bottom: 1px solid #E0E0E0;
+  }
+  
+  .product-table th {
+    background-color: #F8F9FA;
+  }
+  
+  .low-stock {
+    color: #FF0000;
+    font-weight: bold;
+  }
+  
+  .product-table button {
+    background-color: #007BFF;
+    color: #FFF;
+    padding: 5px 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .product-table button:hover {
+    background-color: #0056b3;
+  }
+  
