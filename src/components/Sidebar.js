@@ -6,7 +6,7 @@ const Sidebar = () => {
   return (
     <aside className="sidebar">
       <div className="sidebar-header">
-        <h2>Honeycomb</h2>
+        <h2>honeycomb</h2>
         <p>Inventory Management</p>
       </div>
       <nav className="sidebar-nav">
