@@ -2,7 +2,7 @@
   "name": "bestingems",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://thamil0606.github.io/bestingems",
+  "homepage": "https://Madhukaran-R.github.io/bestingems",
   "dependencies": {
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
@@ -20,7 +20,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "deploy": "gh-pages -b master -d build"
+    "deploy": "gh-pages -b gh-pages -d build"
   },
   "eslintConfig": {
     "extends": [
