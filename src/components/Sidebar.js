@@ -1,18 +1,22 @@
 // src/components/Sidebar.js
 import React from 'react';
 import '../styles/Sidebar.css';
+import { useNavigate } from 'react-router-dom';
+
 
 const Sidebar = () => {
+  const navigate = useNavigate();
+
   return (
     <aside className="sidebar">
       <div className="sidebar-header">
-        <h2>honeycomb</h2>
+        <h2 onClick={() => { navigate('/') }}>Honeycomb</h2>
         <p>Inventory Management</p>
       </div>
       <nav className="sidebar-nav">
         <ul>
-          <li>Dashboard</li>
-          <li>All Products</li>
+          <li onClick={() => { navigate('/dash') }}>Dashboard</li>
+          <li onClick={() => { navigate('/allproducts') }}>All Products</li>
           <li>Stock Adjustments</li>
           <li>Product Requests</li>
           <li>Sold-Out Products</li>
