@@ -8,6 +8,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Home from './pages/home';
 import Dash from './pages/dash';
 import AllProducts from './pages/allproducts';
+import ImportModule from './pages/import';
 
 
 // function App() {
@@ -27,6 +28,7 @@ function App() {
           <Route path='/' element={<Home />} />
           <Route path='/dash' element={<Dash />} />
           <Route path='/allproducts' element={<AllProducts />} />
+          <Route path='/import' element={<ImportModule />} />
         </Routes>
       </Layout>
     </Router>

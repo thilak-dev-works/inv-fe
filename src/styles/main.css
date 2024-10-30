@@ -6,6 +6,48 @@
   box-sizing: border-box;
 }
 
+::-webkit-scrollbar {
+  width: 12px; /* width of the scrollbar */
+  height: 12px; /* height of the scrollbar for horizontal scroll */
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1; /* background color of the scrollbar track */
+  border-radius: 10px; /* rounding the corners of the track */
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #888; /* color of the scrollbar thumb */
+  border-radius: 10px; /* rounding the corners of the scrollbar thumb */
+  border: 3px solid #f1f1f1; /* space around the thumb */
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: #555; /* color when hovering over the scrollbar thumb */
+}
+
+.component1 {
+  display: flex;
+  height: 450px;
+  padding: 5px;
+  gap: 5px;
+}
+.component2 {
+  display: block;
+  border-radius: 10px;
+  background-color: #aaa;
+  flex-grow: 7;
+}
+.component3 {
+  display: block;
+  border-radius: 10px;
+  flex-grow: 3;
+  background-color: #aaa;
+}
+
+.component4 {
+}
+
 body {
   font-family: Arial, sans-serif;
   background-color: #f1f1f1;
@@ -21,4 +63,21 @@ body {
 h1,
 h2 {
   color: #333;
+}
+
+.importmodule .logo {
+  width: 150px;
+  height: 150px;
+  background-color: #aaa;
+  border-radius: 15px;
+}
+
+.x50 {
+  width: 25px;
+  height: 25px;
+  border-radius: 10px;
+  background-color: #aaa;
+}
+.tblProductName {
+  padding: 5px;
 }

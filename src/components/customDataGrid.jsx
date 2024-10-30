@@ -1,19 +1,6 @@
-import { Button, Chip, Stack } from '@mui/material';
+import * as React from 'react';
 import Box from '@mui/material/Box';
 import { DataGrid } from '@mui/x-data-grid';
-
-
-const StatusButton = ({ name }) => {
-    return (
-        <Stack
-            direction={{ xs: 'column', sm: 'row' }}
-            spacing={{ xs: 1, sm: 2, md: 4 }}
-        >
-            <div className='x50'></div>
-            <span>{name}</span>
-        </Stack>
-    );
-};
 
 const columns = [
     { field: 'id', headerName: 'ID', width: 90 },
@@ -22,7 +9,6 @@ const columns = [
         headerName: 'First name',
         width: 150,
         editable: true,
-        renderCell: (params) => <StatusButton name={params.value} />,
     },
     {
         field: 'lastName',
@@ -36,9 +22,6 @@ const columns = [
         type: 'number',
         width: 110,
         editable: true,
-        renderCell: (params) => (
-            <Chip label={params.value > 0 ? params.value : 0} color={params.value > 0 ? "success" : "danger"} />
-        ),
     },
     {
         field: 'fullName',
@@ -61,28 +44,25 @@ const rows = [
     { id: 8, lastName: 'Frances', firstName: 'Rossini', age: 36 },
     { id: 9, lastName: 'Roxie', firstName: 'Harvey', age: 65 },
 ];
-function Dash() {
-    return (
-        <>
-            <div className="component5">
-                <DataGrid
-                    rows={rows}
-                    columns={columns}
-                    initialState={{
-                        pagination: {
-                            paginationModel: {
-                                pageSize: 100,
-                            },
-                        },
-                    }}
-                    pageSizeOptions={[5]}
-                    checkboxSelection
-                    disableRowSelectionOnClick
-                    pagination
-                />
-            </div>
-        </>
-    )
-}
 
-export default Dash;
+export default function CustomDataGrid() {
+    return (
+        <Box sx={{ height: 400, width: '100%' }}>
+            <DataGrid
+                rows={rows}
+                columns={columns}
+                initialState={{
+                    pagination: {
+                        paginationModel: {
+                            pageSize: 5,
+                        },
+                    },
+                }}
+                pageSizeOptions={[5]}
+                checkboxSelection
+                disableRowSelectionOnClick
+                hideFooter
+            />
+        </Box>
+    );
+}
