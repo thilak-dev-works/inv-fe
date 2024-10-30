@@ -1,6 +1,8 @@
 // src/App.js
 import React from 'react';
 import './styles/main.css';
+import './styles/Sidebar.css';
+import './styles/Dashboard.css';
 import Layout from './components/layout';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Home from './pages/home';
