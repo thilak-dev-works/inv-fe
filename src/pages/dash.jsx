@@ -1,4 +1,4 @@
-import { Button, Chip, Divider, Popover, Stack } from '@mui/material';
+import { Button, Divider, Popover, Stack } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
 import { useEffect, useState } from 'react';
 import NotificationsIcon from '@mui/icons-material/Notifications';
@@ -13,14 +13,14 @@ const ProductTitle = ({ name, row }) => {
                 alignItems: "center",
             }}
         >
-            <img className='x50' src={row.thumbnail} />
+            <img alt='thumbnail.jpg' className='x50' src={row.thumbnail} />
             <span>{name}</span>
         </Stack>
     );
 };
 
 const TblProductStatus = (props) => {
-    if (props.value == "Low Stock") {
+    if (props.value === "Low Stock") {
         return <span className='tblStatusInactive'>Inactive</span>
     } else {
         return <div className='tblStatusActive'><div className='dot'></div>Active</div>
