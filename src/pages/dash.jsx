@@ -1,77 +1,166 @@
-import { Button, Chip, Stack } from '@mui/material';
-import Box from '@mui/material/Box';
+import { Button, Chip, Divider, Popover, Stack } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
+import { useEffect, useState } from 'react';
+import NotificationsIcon from '@mui/icons-material/Notifications';
 
-
-const StatusButton = ({ name }) => {
+const ProductTitle = ({ name, row }) => {
     return (
         <Stack
-            direction={{ xs: 'column', sm: 'row' }}
-            spacing={{ xs: 1, sm: 2, md: 4 }}
+            direction="row"
+            spacing={2}
+            sx={{
+                justifyContent: "start",
+                alignItems: "center",
+            }}
         >
-            <div className='x50'></div>
+            <img className='x50' src={row.thumbnail} />
             <span>{name}</span>
         </Stack>
     );
 };
 
-const columns = [
-    { field: 'id', headerName: 'ID', width: 90 },
-    {
-        field: 'firstName',
-        headerName: 'First name',
-        width: 150,
-        editable: true,
-        renderCell: (params) => <StatusButton name={params.value} />,
-    },
-    {
-        field: 'lastName',
-        headerName: 'Last name',
-        width: 150,
-        editable: true,
-    },
-    {
-        field: 'age',
-        headerName: 'Age',
-        type: 'number',
-        width: 110,
-        editable: true,
-        renderCell: (params) => (
-            <Chip label={params.value > 0 ? params.value : 0} color={params.value > 0 ? "success" : "danger"} />
-        ),
-    },
-    {
-        field: 'fullName',
-        headerName: 'Full name',
-        description: 'This column has a value getter and is not sortable.',
-        sortable: false,
-        width: 160,
-        valueGetter: (value, row) => `${row.firstName || ''} ${row.lastName || ''}`,
-    },
-];
+const TblProductStatus = (props) => {
+    if (props.value == "Low Stock") {
+        return <span className='tblStatusInactive'>Inactive</span>
+    } else {
+        return <div className='tblStatusActive'><div className='dot'></div>Active</div>
+    }
+}
 
-const rows = [
-    { id: 1, lastName: 'Snow', firstName: 'Jon', age: 14 },
-    { id: 2, lastName: 'Lannister', firstName: 'Cersei', age: 31 },
-    { id: 3, lastName: 'Lannister', firstName: 'Jaime', age: 31 },
-    { id: 4, lastName: 'Stark', firstName: 'Arya', age: 11 },
-    { id: 5, lastName: 'Targaryen', firstName: 'Daenerys', age: null },
-    { id: 6, lastName: 'Melisandre', firstName: null, age: 150 },
-    { id: 7, lastName: 'Clifford', firstName: 'Ferrara', age: 44 },
-    { id: 8, lastName: 'Frances', firstName: 'Rossini', age: 36 },
-    { id: 9, lastName: 'Roxie', firstName: 'Harvey', age: 65 },
-];
-function Dash() {
+const TblProductQuantity = (props) => {
+    if (props.value < 5) {
+        return <span className='tblStatusInactive'>{props.value}</span>
+    } else {
+        return <div className='tblStatusActive'>{props.value}</div>
+    }
+}
+
+function Dash(props) {
+    const [rowData, setRowData] = useState([]);
+
+
+    const columns = [
+        { field: 'id', headerName: 'ID', width: 90 },
+        {
+            field: 'title',
+            headerName: 'Products',
+            width: 500,
+            editable: true,
+            renderCell: (params) => <ProductTitle name={params.value} row={params.row} />,
+        },
+        {
+            field: 'category',
+            headerName: 'category',
+            width: 150,
+            editable: true,
+        },
+        {
+            field: 'sku',
+            headerName: 'SKU',
+            width: 100,
+            editable: true,
+        },
+        {
+            field: 'stock',
+            headerName: 'Quantity',
+            width: 150,
+            editable: true,
+            renderCell: (params) => <TblProductQuantity {...params} />
+        },
+        {
+            field: 'price',
+            headerName: 'Price ($)',
+            width: 150,
+            editable: true,
+        },
+        {
+            field: 'availabilityStatus',
+            headerName: 'status',
+            width: 150,
+            editable: true,
+            renderCell: (params) => <TblProductStatus {...params} />
+        },
+        {
+            field: 'Options',
+            width: 100,
+            renderCell: (params) => <TblProductOptions {...params} />
+        },
+    ];
+
+    const TblProductOptions = (props) => {
+        const [anchorEl, setAnchorEl] = useState(null);
+
+        const handleClick = (event) => {
+            setAnchorEl(event.currentTarget);
+        };
+
+        const handleClose = () => {
+            setAnchorEl(null);
+        };
+
+        const open = Boolean(anchorEl);
+        const id = open ? 'simple-popover' : undefined;
+        return (
+            <>
+                <Button onClick={handleClick}>..</Button>
+                <Popover
+                    id={id}
+                    open={open}
+                    anchorEl={anchorEl}
+                    onClose={handleClose}
+                    anchorOrigin={{
+                        vertical: 'bottom',
+                        horizontal: 'left',
+                    }}
+                >
+                    <Stack
+                        direction="column"
+                        sx={{
+                            justifyContent: "start",
+                            alignItems: "center",
+                            borderRadius: 20
+                        }}
+                    >
+                        <Stack direction="row" sx={{
+                            justifyContent: "start",
+                            alignItems: "center",
+                            color: '#aaa',
+                        }}>
+                            <NotificationsIcon />
+                            <span>Adjust Stock</span>
+                        </Stack>
+                        <Button variant='text' color='primary'>Adjust stock</Button>
+                        <Button variant='text' color='primary'>Edit reorder point</Button>
+                        <Button variant='text' color='primary' startIcon={<NotificationsIcon />}>Edit alert settings</Button>
+                        <Divider
+                            orientation="vertical"
+                            flexItem
+                            sx={{ borderColor: 'primary.main', borderWidth: 1 }}
+                        />
+                        <Button variant='text' color='error'>Delete Item</Button>
+                    </Stack>
+                </Popover>
+            </>
+        )
+    }
+
+
+    useEffect(() => {
+        fetch("https://dummyjson.com/products").then(async res => {
+            let data = await res.json()
+            setRowData(data.products);
+        }).catch(err => console.log(err))
+    }, [])
     return (
         <>
             <div className="component5">
                 <DataGrid
-                    rows={rows}
+                    rows={rowData}
                     columns={columns}
                     initialState={{
                         pagination: {
                             paginationModel: {
-                                pageSize: 100,
+                                pageSize: 15,
                             },
                         },
                     }}
@@ -79,6 +168,7 @@ function Dash() {
                     checkboxSelection
                     disableRowSelectionOnClick
                     pagination
+                    rowHeight={50}
                 />
             </div>
         </>
