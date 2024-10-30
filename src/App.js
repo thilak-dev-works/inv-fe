@@ -1,7 +1,5 @@
 // src/App.js
 import React from 'react';
-import Sidebar from './components/Sidebar';
-import Dashboard from './components/Dashboard';
 import './styles/main.css';
 import Layout from './components/layout';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
