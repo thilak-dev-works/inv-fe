@@ -9,6 +9,7 @@ import Dash from './pages/dash';
 import AllProducts from './pages/allproducts';
 import ImportModule from './pages/import';
 import DeletedProducts from './pages/deletedproducts';
+import ImportPage from './components/ImportPage';
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
           <Route path='/allproducts' element={<AllProducts />} />
           <Route path='/deletedproducts' element={<DeletedProducts />} />
           <Route path='/import' element={<ImportModule />} />
+          <Route path='/import-page' element={<ImportPage />} />
         </Routes>
       </Layout>
     </Router>
