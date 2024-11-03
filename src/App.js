@@ -1,4 +1,3 @@
-// src/App.js
 import React from 'react';
 import './styles/main.css';
 import './styles/Sidebar.css';
@@ -9,16 +8,7 @@ import Home from './pages/home';
 import Dash from './pages/dash';
 import AllProducts from './pages/allproducts';
 import ImportModule from './pages/import';
-
-
-// function App() {
-//   return (
-//     <div className="app-container">
-//       <Sidebar />
-//       <Dashboard />
-//     </div>
-//   );
-// }
+import DeletedProducts from './pages/deletedproducts';
 
 function App() {
   return (
@@ -28,6 +18,7 @@ function App() {
           <Route path='/' element={<Home />} />
           <Route path='/dash' element={<Dash />} />
           <Route path='/allproducts' element={<AllProducts />} />
+          <Route path='/deletedproducts' element={<DeletedProducts />} />
           <Route path='/import' element={<ImportModule />} />
         </Routes>
       </Layout>
