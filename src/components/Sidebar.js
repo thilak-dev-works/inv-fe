@@ -113,10 +113,41 @@ const Sidebar = () => {
             <DeleteIcon sx={{ marginRight: '8px', fontSize: '20px' }} />
             Deleted Products
           </li>
-          <li>
-            <ReportIcon sx={{ marginRight: '8px', fontSize: '20px' }} />
-            Reports
+          <li className="expandable" onClick={toggleAllProducts}>
+            <div style={{ display: 'flex', alignItems: 'center' }}>
+              <ReportIcon sx={{ marginRight: '8px', fontSize: '20px' }} />
+              Reports
+              {isAllProductsOpen ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+            </div>
           </li>
+          <Collapse in={isAllProductsOpen} timeout="auto" unmountOnExit>
+            <ul className="submenu">
+              <li
+                className={selectedSubMenu === 'Replenishment' ? 'submenu-item active' : 'submenu-item'}
+                onClick={() => handleSubMenuClick('Replenishment')}
+              >
+                Replenishment
+              </li>
+              <li
+                className={selectedSubMenu === 'Top 20 to Replenish' ? 'submenu-item active' : 'submenu-item'}
+                onClick={() => handleSubMenuClick('Top 20 to Replenish')}
+              >
+                Top 20 to Replenish
+              </li>
+              <li
+                className={selectedSubMenu === 'Overstock' ? 'submenu-item active' : 'submenu-item'}
+                onClick={() => handleSubMenuClick('Overstock')}
+              >
+                Overstock
+              </li>
+              <li
+                className={selectedSubMenu === 'ABC Analysis' ? 'submenu-item active' : 'submenu-item'}
+                onClick={() => handleSubMenuClick('ABC Analysis')}
+              >
+                ABC Analysis
+              </li>
+            </ul>
+          </Collapse>
         </ul>
       </nav>
       <div className="sidebar-footer horizontal">
