@@ -1,7 +1,7 @@
 import React from "react";
 import Sidebar from "./Sidebar";
 import { useNavigate, useLocation } from 'react-router-dom';
-import { Button, Box } from "@mui/material";
+import { Button } from "@mui/material";
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 
@@ -20,7 +20,7 @@ let Layout = ({ children }) => {
                 subtitle: "Overview of Current Stock and Inventory Performance",
             },
         };
-        
+
         return headers[pathname] || {
             title: "Welcome, Olivia!",
             subtitle: "Overview of Current Stock and Inventory Performance",
@@ -38,7 +38,7 @@ let Layout = ({ children }) => {
                         <h1 style={{ margin: 0, fontSize: '1.25rem' }}>{headerTitle}</h1>
                         <p style={{ margin: 0, color: '#6b7280' }}>{headerSubtitle}</p>
                     </div>
-                    <Button 
+                    <Button
                         variant="contained"
                         onClick={() => navigate("/import")}
                         startIcon={<AddCircleOutlineIcon />}
