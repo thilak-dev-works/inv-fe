@@ -6,7 +6,7 @@ export default function ImportModule(props) {
     const navigate = useNavigate();
 
     const handleImportClick = () => {
-        navigate('/import-page'); // Updated to match the new route
+        navigate('/importpage'); // Updated to match the new route
     };
     return (
         <div className="importmodule">
