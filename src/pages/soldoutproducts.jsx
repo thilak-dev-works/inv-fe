@@ -4,6 +4,8 @@ import { DataGrid } from '@mui/x-data-grid';
 import SearchIcon from '@mui/icons-material/Search';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import SortIcon from '@mui/icons-material/Sort';
+import { styled } from '@mui/system';
+
 
 const ProductTitle = ({ name, row }) => {
     return (
@@ -21,7 +23,64 @@ const ProductTitle = ({ name, row }) => {
     );
 };
 
-function DeletedProducts(props) {
+const QuantityBadge = styled('div')(({ lowStock }) => ({
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: '16px',
+    border: `1px solid ${lowStock ? '#f0c1a1' : '#a5d6a7'}`,
+    backgroundColor: lowStock ? '#fef4e8' : '#e8f5e9',
+    color: lowStock ? '#c44e3b' : '#388e3c',
+    width: '36px',
+    height: '24px',
+    fontWeight: 'bold',
+    lineHeight: '24px',
+}));
+
+const renderQuantity = (params) => {
+    const lowStock = params.value < 1;
+    return (
+        <div style={{ display: 'flex', alignItems: 'center', height: '100%', justifyContent: 'flex-start' }}>
+            <QuantityBadge lowStock={lowStock}>{params.value}</QuantityBadge>
+        </div>
+    );
+};
+
+const StatusBadge = styled('div')(({ inactive }) => ({
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: '16px',
+    border: `1px solid ${inactive ? '#f0c1a1' : '#a5d6a7'}`,
+    backgroundColor: inactive ? '#fef4e8' : '#e8f5e9',
+    color: inactive ? '#c44e3b' : '#388e3c',
+    padding: '0 12px',
+    height: '24px',
+    fontWeight: 'bold',
+    lineHeight: '24px',
+}));
+
+const StatusDot = styled('span')(({ inactive }) => ({
+    width: '8px',
+    height: '8px',
+    borderRadius: '50%',
+    backgroundColor: inactive ? '#c44e3b' : '#388e3c',
+    marginRight: '8px',
+}));
+
+const renderStatus = (params) => {
+    const inactive = !params.value;
+    return (
+        <div style={{ display: 'flex', alignItems: 'center', height: '100%', justifyContent: 'flex-start' }}>
+            <StatusBadge inactive={inactive}>
+                <StatusDot inactive={inactive} />
+                {inactive ? 'Inactive' : 'Active'}
+            </StatusBadge>
+        </div>
+    );
+};
+
+function SoldOutProducts(props) {
     const [rowData, setRowData] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
     const [filterAnchorEl, setFilterAnchorEl] = useState(null);
@@ -30,7 +89,7 @@ function DeletedProducts(props) {
     const [sortOption, setSortOption] = useState('A to Z');
 
     useEffect(() => {
-        fetch("http://localhost:8000/v1/inventory?status=false")
+        fetch("http://localhost:8000/v1/inventory/stock-out")
             .then(async (res) => {
                 let data = await res.json();
                 data.forEach((element) => {
@@ -99,25 +158,21 @@ function DeletedProducts(props) {
         {
             field: 'category',
             headerName: 'Category',
-            flex: 0.5,
+            flex: 0.4,
             editable: true,
         },
         {
             field: 'sku',
             headerName: 'SKU',
-            flex: 0.5,
-            editable: true,
-        },
-        {
-            field: 'price',
-            headerName: 'Price',
             flex: 0.4,
             editable: true,
         },
+        { field: 'stock', headerName: 'Quantity in hand', flex: 0.4, renderCell: renderQuantity },
+        { field: 'status', headerName: 'Status', flex: 0.3, renderCell: renderStatus },
         {
             field: 'action',
             headerName: 'Action',
-            flex: 0.3,
+            flex: 0.5,
             renderCell: (params) => (
                 <Button
                     variant="outlined"
@@ -137,7 +192,7 @@ function DeletedProducts(props) {
                         },
                     }}
                 >
-                    Restore
+                    Adjust Stock
                 </Button>
             ),
         }
@@ -295,4 +350,4 @@ function DeletedProducts(props) {
     );
 }
 
-export default DeletedProducts;
+export default SoldOutProducts;

@@ -20,12 +20,13 @@ const Sidebar = () => {
   const [selectedSubMenu, setSelectedSubMenu] = useState('Gemstones');
 
   const toggleAllProducts = () => {
+    navigate(`/allproducts`)
     setAllProductsOpen(!isAllProductsOpen);
   };
 
   const handleSubMenuClick = (category) => {
     setSelectedSubMenu(category);
-    navigate(`/allproducts/${category.toLowerCase()}`);
+    navigate(`/allproducts?category=${category}`);
   };
 
   return (
@@ -79,13 +80,13 @@ const Sidebar = () => {
               </li>
               <li
                 className={selectedSubMenu === 'Drops & Beads' ? 'submenu-item active' : 'submenu-item'}
-                onClick={() => handleSubMenuClick('Drops & Beads')}
+                onClick={() => handleSubMenuClick('DropsBeads')}
               >
                 Drops & Beads
               </li>
               <li
                 className={selectedSubMenu === 'Semi-Mounts' ? 'submenu-item active' : 'submenu-item'}
-                onClick={() => handleSubMenuClick('Semi-Mounts')}
+                onClick={() => handleSubMenuClick('Semimounts')}
               >
                 Semi-Mounts
               </li>
@@ -97,7 +98,7 @@ const Sidebar = () => {
               </li>
             </ul>
           </Collapse>
-          <li>
+          <li className={location.pathname === '/stockadjustedproducts' ? 'active' : ''} onClick={() => navigate('/stockadjustedproducts')}>
             <AdjustIcon sx={{ marginRight: '8px', fontSize: '20px' }} />
             Stock Adjustments
           </li>
@@ -105,7 +106,7 @@ const Sidebar = () => {
             <AssignmentIcon sx={{ marginRight: '8px', fontSize: '20px' }} />
             Product Requests
           </li>
-          <li>
+          <li className={location.pathname === '/soldoutproducts' ? 'active' : ''} onClick={() => navigate('/soldoutproducts')}>
             <ArchiveIcon sx={{ marginRight: '8px', fontSize: '20px' }} />
             Sold-Out Products
           </li>

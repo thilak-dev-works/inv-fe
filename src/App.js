@@ -10,6 +10,8 @@ import AllProducts from './pages/allproducts';
 import ImportModule from './pages/import';
 import DeletedProducts from './pages/deletedproducts';
 import ImportPage from './components/ImportPage';
+import SoldOutProducts from './pages/soldoutproducts';
+import StockAdjustmentsProducts from './pages/stockadjustmentsproducts';
 
 function App() {
   return (
@@ -20,6 +22,8 @@ function App() {
           <Route path='/dash' element={<Dash />} />
           <Route path='/allproducts' element={<AllProducts />} />
           <Route path='/deletedproducts' element={<DeletedProducts />} />
+          <Route path='/soldoutproducts' element={<SoldOutProducts />} />
+          <Route path='/stockadjustedproducts' element={<StockAdjustmentsProducts />} />
           <Route path='/import' element={<ImportModule />} />
           <Route path='/import-page' element={<ImportPage />} />
         </Routes>

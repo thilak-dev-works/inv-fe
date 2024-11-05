@@ -19,6 +19,18 @@ let Layout = ({ children }) => {
                 title: "Welcome, Olivia!",
                 subtitle: "Overview of Current Stock and Inventory Performance",
             },
+            "/allproducts": {
+                title: "All Products",
+                subtitle: "Overview of Current Stock and Inventory Performance",
+            },
+            "/soldoutproducts": {
+                title: "Sold-Out Products",
+                subtitle: "Overview of Current Stock and Inventory Performance",
+            },
+            "/stockadjustedproducts": {
+                title: "Stock Adjustment",
+                subtitle: "Overview of Adjusted stocks",
+            },
         };
 
         return headers[pathname] || {

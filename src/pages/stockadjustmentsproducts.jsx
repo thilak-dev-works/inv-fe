@@ -4,6 +4,8 @@ import { DataGrid } from '@mui/x-data-grid';
 import SearchIcon from '@mui/icons-material/Search';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import SortIcon from '@mui/icons-material/Sort';
+import { styled } from '@mui/system';
+
 
 const ProductTitle = ({ name, row }) => {
     return (
@@ -21,7 +23,41 @@ const ProductTitle = ({ name, row }) => {
     );
 };
 
-function DeletedProducts(props) {
+const StatusBadge = styled('div')(({ inactive }) => ({
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: '16px',
+    border: `1px solid ${inactive ? '#f0c1a1' : '#a5d6a7'}`,
+    backgroundColor: inactive ? '#fef4e8' : '#e8f5e9',
+    color: inactive ? '#c44e3b' : '#388e3c',
+    padding: '0 12px',
+    height: '24px',
+    fontWeight: 'bold',
+    lineHeight: '24px',
+}));
+
+const StatusDot = styled('span')(({ inactive }) => ({
+    width: '8px',
+    height: '8px',
+    borderRadius: '50%',
+    backgroundColor: inactive ? '#c44e3b' : '#388e3c',
+    marginRight: '8px',
+}));
+
+const renderStatus = (params) => {
+    const inactive = !params.value;
+    return (
+        <div style={{ display: 'flex', alignItems: 'center', height: '100%', justifyContent: 'flex-start' }}>
+            <StatusBadge inactive={inactive}>
+                <StatusDot inactive={inactive} />
+                {inactive ? 'Inactive' : 'Active'}
+            </StatusBadge>
+        </div>
+    );
+};
+
+function StockAdjustmentsProducts(props) {
     const [rowData, setRowData] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
     const [filterAnchorEl, setFilterAnchorEl] = useState(null);
@@ -30,7 +66,7 @@ function DeletedProducts(props) {
     const [sortOption, setSortOption] = useState('A to Z');
 
     useEffect(() => {
-        fetch("http://localhost:8000/v1/inventory?status=false")
+        fetch("http://localhost:8000/v1/inventory/stock-history")
             .then(async (res) => {
                 let data = await res.json();
                 data.forEach((element) => {
@@ -47,10 +83,10 @@ function DeletedProducts(props) {
                 return [...data].sort((a, b) => a.name.localeCompare(b.name));
             case 'Z to A':
                 return [...data].sort((a, b) => b.name.localeCompare(a.name));
-            case 'Lowest Price':
-                return [...data].sort((a, b) => a.price - b.price);
-            case 'Highest Price':
-                return [...data].sort((a, b) => b.price - a.price);
+            case 'Lowest Adjusted':
+                return [...data].sort((a, b) => a.change - b.change);
+            case 'Highest Adjusted':
+                return [...data].sort((a, b) => b.change - a.change);
             default:
                 return data;
         }
@@ -92,32 +128,50 @@ function DeletedProducts(props) {
         {
             field: 'name',
             headerName: 'Products',
-            flex: 1,
+            flex: 0.7,
             editable: true,
             renderCell: (params) => <ProductTitle name={params.value} row={params.row} />,
         },
         {
-            field: 'category',
-            headerName: 'Category',
-            flex: 0.5,
-            editable: true,
-        },
-        {
-            field: 'sku',
-            headerName: 'SKU',
-            flex: 0.5,
-            editable: true,
-        },
-        {
-            field: 'price',
-            headerName: 'Price',
+            field: 'reason',
+            headerName: 'Reason',
             flex: 0.4,
             editable: true,
         },
         {
+            field: 'stock',
+            headerName: 'Stock',
+            flex: 0.2,
+            editable: true,
+        },
+        {
+            field: 'change',
+            headerName: 'Adjusted',
+            flex: 0.2,
+            editable: true,
+            renderCell: (params) => (
+                <span style={{ color: params.value > 0 ? 'green' : 'red' }}>
+                    {params.value}
+                </span>
+            ),
+        },
+        {
+            field: 'date',
+            headerName: 'Adjusted On',
+            flex: 0.4,
+            editable: true,
+        },
+        {
+            field: 'updatedBy',
+            headerName: 'Adjusted By',
+            flex: 0.4,
+            editable: true,
+        },
+        { field: 'status', headerName: 'Status', flex: 0.3, renderCell: renderStatus },
+        {
             field: 'action',
             headerName: 'Action',
-            flex: 0.3,
+            flex: 0.5,
             renderCell: (params) => (
                 <Button
                     variant="outlined"
@@ -137,7 +191,7 @@ function DeletedProducts(props) {
                         },
                     }}
                 >
-                    Restore
+                    Adjust Stock
                 </Button>
             ),
         }
@@ -267,8 +321,8 @@ function DeletedProducts(props) {
                             >
                                 <FormControlLabel value="A to Z" control={<Radio />} label="A to Z" />
                                 <FormControlLabel value="Z to A" control={<Radio />} label="Z to A" />
-                                <FormControlLabel value="Lowest Price" control={<Radio />} label="Lowest Price" />
-                                <FormControlLabel value="Highest Price" control={<Radio />} label="Highest Price" />
+                                <FormControlLabel value="Lowest Adjusted" control={<Radio />} label="Lowest Adjusted" />
+                                <FormControlLabel value="Highest Adjusted" control={<Radio />} label="Highest Adjusted" />
                             </RadioGroup>
                         </Popover>
                     </Stack>
@@ -295,4 +349,4 @@ function DeletedProducts(props) {
     );
 }
 
-export default DeletedProducts;
+export default StockAdjustmentsProducts;
