@@ -12,6 +12,7 @@ import DeletedProducts from './pages/deletedproducts';
 import ImportPage from './components/ImportPage';
 import SoldOutProducts from './pages/soldoutproducts';
 import StockAdjustmentsProducts from './pages/stockadjustmentsproducts';
+import StockRequestProducts from './pages/stockrequestproducts';
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
           <Route path='/deletedproducts' element={<DeletedProducts />} />
           <Route path='/soldoutproducts' element={<SoldOutProducts />} />
           <Route path='/stockadjustedproducts' element={<StockAdjustmentsProducts />} />
+          <Route path='/stockrequestedproducts' element={<StockRequestProducts />} />
           <Route path='/import' element={<ImportModule />} />
           <Route path='/import-page' element={<ImportPage />} />
         </Routes>

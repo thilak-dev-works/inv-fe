@@ -102,9 +102,9 @@ const Sidebar = () => {
             <AdjustIcon sx={{ marginRight: '8px', fontSize: '20px' }} />
             Stock Adjustments
           </li>
-          <li>
+          <li className={location.pathname === '/stockrequestedproducts' ? 'active' : ''} onClick={() => navigate('/stockrequestedproducts')}>
             <AssignmentIcon sx={{ marginRight: '8px', fontSize: '20px' }} />
-            Product Requests
+            Product Requests  
           </li>
           <li className={location.pathname === '/soldoutproducts' ? 'active' : ''} onClick={() => navigate('/soldoutproducts')}>
             <ArchiveIcon sx={{ marginRight: '8px', fontSize: '20px' }} />

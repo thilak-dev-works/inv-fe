@@ -31,6 +31,10 @@ let Layout = ({ children }) => {
                 title: "Stock Adjustment",
                 subtitle: "Overview of Adjusted stocks",
             },
+            "/stockrequestedproducts": {
+                title: "Product Requests",
+                subtitle: "View and update out of stocks products",
+            },
         };
 
         return headers[pathname] || {
