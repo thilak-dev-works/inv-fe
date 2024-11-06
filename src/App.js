@@ -9,7 +9,7 @@ import Dash from './pages/dash';
 import AllProducts from './pages/allproducts';
 import ImportModule from './pages/import';
 import DeletedProducts from './pages/deletedproducts';
-import ImportPage from './components/ImportPage';
+import ImportPage from './pages/importPage';
 import SoldOutProducts from './pages/soldoutproducts';
 import StockAdjustmentsProducts from './pages/stockadjustmentsproducts';
 import StockRequestProducts from './pages/stockrequestproducts';
@@ -27,7 +27,7 @@ function App() {
           <Route path='/stockadjustedproducts' element={<StockAdjustmentsProducts />} />
           <Route path='/stockrequestedproducts' element={<StockRequestProducts />} />
           <Route path='/import' element={<ImportModule />} />
-          <Route path='/import-page' element={<ImportPage />} />
+          <Route path='/importpage' element={<ImportPage />} />
         </Routes>
       </Layout>
     </Router>
