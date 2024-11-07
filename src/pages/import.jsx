@@ -1,6 +1,6 @@
 import { Button, Stack } from "@mui/material";
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
-import { useNavigate } from 'react-router-dom';
+// import { useNavigate } from 'react-router-dom';
 import Papa from 'papaparse';
 import { useState } from 'react';
 import { DataGrid } from '@mui/x-data-grid';
@@ -8,7 +8,7 @@ import { DataGrid } from '@mui/x-data-grid';
 
 
 export default function ImportModule(props) {
-    const navigate = useNavigate();
+    // const navigate = useNavigate();
     const [data, setData] = useState([]);
     const [fileImported, setFileImported] = useState(false); // State to track file import
     const [selectedRows, setSelectedRows] = useState([]); // State to track selected rows
