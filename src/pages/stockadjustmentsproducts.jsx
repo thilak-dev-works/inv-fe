@@ -8,6 +8,7 @@ import { styled } from '@mui/system';
 
 
 const ProductTitle = ({ name, row }) => {
+    console.log("name", name , row)
     return (
         <Stack
             direction="row"
@@ -18,7 +19,7 @@ const ProductTitle = ({ name, row }) => {
             }}
         >
             <img alt="thumbnail.jpg" className="x50" src={row.images[0]} />
-            <span>{name}</span>
+            <span>{name}123145</span>
         </Stack>
     );
 };
