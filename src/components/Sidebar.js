@@ -53,7 +53,10 @@ const Sidebar = () => {
       </div>
       <nav className="sidebar-nav">
         <ul>
-          <li>
+          <li 
+                    className={location.pathname === '/' ? 'active' : ''}
+                    onClick={() => {navigate('/') ; setSelectedSubMenu('dashboard')}}
+          >
             <DashboardIcon sx={{ marginRight: '8px', fontSize: '20px' }} />
             Dashboard
           </li>
