@@ -2,7 +2,7 @@
   "name": "bestingems",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://Madhukaran-R.github.io/bestingems",
+  "homepage": "https://inv-fe.netlify.app/bestingems",
   "dependencies": {
     "@emotion/react": "^11.13.3",
     "@emotion/styled": "^11.13.0",
