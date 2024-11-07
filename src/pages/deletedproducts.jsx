@@ -123,7 +123,7 @@ function DeletedProducts(props) {
                     variant="outlined"
                     color="primary"
                     size="small"
-                    onClick={() => handleRestore(params.row)}
+                    onClick={() => handleRestore(params.row)} // Call handleRestore when clicked
                     sx={{
                         minWidth: '80px',
                         textTransform: 'none',
@@ -144,7 +144,30 @@ function DeletedProducts(props) {
     ];
 
     const handleRestore = (row) => {
-        console.log("Restore clicked for:", row);
+        const sku = row.sku; // Extract the SKU from the row
+        fetch(`https://inv-be.vercel.app/v1/inventory/sku/${sku}/change-status`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ status: true }), // Send the updated status
+        })
+        .then((response) => {
+            if (response.ok) {
+                // If the response is successful, refresh the product list
+                return fetch("https://inv-be.vercel.app/v1/inventory?status=false");
+            } else {
+                throw new Error('Failed to restore the product');
+            }
+        })
+        .then(async (res) => {
+            let data = await res.json();
+            data.forEach((element) => {
+                element.images[0] = "https://cdn.dummyjson.com/products/images/beauty/Essence%20Mascara%20Lash%20Princess/1.png";
+            });
+            setRowData(data); // Update the state with the new data
+        })
+        .catch((err) => console.log(err));
     };
 
     return (

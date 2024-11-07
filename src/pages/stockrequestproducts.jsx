@@ -7,6 +7,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import SearchIcon from '@mui/icons-material/Search';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import SortIcon from '@mui/icons-material/Sort';
+import AdjustStockSidebar from './adjuststocksidebar';
 
 const StatusBadge = styled(Box)({
     display: 'inline-flex',
@@ -61,12 +62,18 @@ function StockRequestProducts() {
     const [sortAnchorEl, setSortAnchorEl] = useState(null);
     const [selectedCategory, setSelectedCategory] = useState('');
     const [sortOption, setSortOption] = useState('A to Z');
+    const [isAdjustStockOpen, setAdjustStockOpen] = useState(false);
+    const [selectedProduct, setSelectedProduct] = useState(null);
 
-    useEffect(() => {
+    const fetchData = () => {
         fetch("https://inv-be.vercel.app/v1/inventory/inventory-with-requests")
             .then(res => res.json())
             .then(data => setData(data))
             .catch(error => console.error("Error fetching data:", error));
+    };
+
+    useEffect(() => {
+        fetchData();
     }, []);
 
     const toggleRequests = (productId) => {
@@ -76,14 +83,16 @@ function StockRequestProducts() {
         }));
     };
 
-    const handleMenuOpen = (event, request) => {
+    const handleMenuOpen = (event, request, product) => {
         setAnchorEl(event.currentTarget);
         setSelectedRequest(request);
+        setSelectedProduct(product);
     };
 
     const handleMenuClose = () => {
         setAnchorEl(null);
         setSelectedRequest(null);
+        setSelectedProduct(null);
     };
 
     const handleCopyEmail = () => {
@@ -91,8 +100,25 @@ function StockRequestProducts() {
         handleMenuClose();
     };
 
-    const handleDeleteRequest = () => {
-        handleMenuClose();
+    const handleDeleteRequest = async () => {
+        if (selectedProduct) {
+            const apiUrl = `https://inv-be.vercel.app/v1/inventory/sku/${selectedProduct.sku}/remove-request`;
+            try {
+                await fetch(apiUrl, {
+                    method: "PUT",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        requestId: selectedRequest._id
+                    })
+                });
+                fetchData();
+                handleMenuClose();
+            } catch (error) {
+                console.error("Error deleting request:", error);
+            }
+        }
     };
 
     const handleSortClick = (event) => setSortAnchorEl(event.currentTarget);
@@ -107,6 +133,38 @@ function StockRequestProducts() {
     const handleCategoryChange = (event) => {
         setSelectedCategory(event.target.value === 'clear' ? '' : event.target.value);
         handleFilterClose();
+    };
+
+    const handleAdjustStockOpen = (product) => {
+        setSelectedProduct(product);
+        setAdjustStockOpen(true);
+    };
+
+    const handleAdjustStockClose = () => {
+        setAdjustStockOpen(false);
+        setSelectedProduct(null);
+    };
+
+    const handleSaveStockAdjustment = async (quantity, reason) => {
+        const apiUrl = `https://inv-be.vercel.app/v1/inventory/sku/${selectedProduct.sku}/update-stock`;
+        try {
+            const response = await fetch(apiUrl, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    change: quantity,
+                    updatedBy: "admin",
+                    reason: reason
+                })
+            });
+            await response.json();
+            fetchData(); // Refresh data after adjusting stock
+            setAdjustStockOpen(false); // Close sidebar after saving
+        } catch (error) {
+            console.error("Error updating stock:", error);
+        }
     };
 
     const filteredData = data.filter((product) =>
@@ -218,10 +276,10 @@ function StockRequestProducts() {
 
             {sortedData.map((product) => (
                 <ProductCard key={product._id}>
-                    <AdjustStockButton variant="outlined">
+                    <AdjustStockButton variant="outlined" onClick={() => handleAdjustStockOpen(product)}>
                         Adjust Stock
                     </AdjustStockButton>
-                    
+
                     {/* Existing content displaying product information */}
                     <Stack direction="row" alignItems="center" spacing={2} sx={{ width: '100%' }}>
                         <img src={product.images[0]} alt={product.name} style={{ width: '50px', height: '50px', borderRadius: '8px' }} />
@@ -306,7 +364,7 @@ function StockRequestProducts() {
                                                 <Typography variant="body2">{new Date(request.requestedOn).toLocaleDateString()}</Typography>
                                             </TableCell>
                                             <TableCell>
-                                                <IconButton onClick={(e) => handleMenuOpen(e, request)}>
+                                                <IconButton onClick={(e) => handleMenuOpen(e, request, product)}>
                                                     <MoreVertIcon />
                                                 </IconButton>
                                                 <Button
@@ -335,7 +393,12 @@ function StockRequestProducts() {
                                                         <ContentCopyIcon fontSize="small" sx={{ marginRight: '8px' }} />
                                                         Copy Email
                                                     </MenuItem>
-                                                    <MenuItem onClick={handleDeleteRequest} sx={{ color: 'red' }}>
+                                                    <MenuItem
+                                                        onClick={
+                                                            handleDeleteRequest
+                                                        }
+                                                        sx={{ color: 'red' }}
+                                                    >
                                                         <DeleteIcon fontSize="small" sx={{ marginRight: '8px' }} />
                                                         Delete Request
                                                     </MenuItem>
@@ -349,6 +412,13 @@ function StockRequestProducts() {
                     )}
                 </ProductCard>
             ))}
+
+            <AdjustStockSidebar
+                open={isAdjustStockOpen}
+                onClose={handleAdjustStockClose}
+                currentStock={selectedProduct?.stock || 0}
+                onSave={handleSaveStockAdjustment}
+            />
         </div>
     );
 }

@@ -8,6 +8,7 @@ import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 let Layout = ({ children }) => {
     const navigate = useNavigate();
     const location = useLocation();
+    
 
     const getHeaderContent = (pathname) => {
         const headers = {
@@ -39,6 +40,10 @@ let Layout = ({ children }) => {
                 title: "Product Requests",
                 subtitle: "View and update out of stocks products",
             },
+            "/import": {
+                title: "Imports",
+                subtitle: "Update Product Quantities from CSV",
+            },
         };
 
         return headers[pathname] || {
@@ -53,9 +58,9 @@ let Layout = ({ children }) => {
     let headerAction = null;
     //let additionalContent = null;
 
-    if (location.pathname === "/importpage") {
+    if (location.pathname === "/import") {
         headerAction = (
-            <div style={{ flex: 1, padding: '20px', backgroundColor: '#ffffff;' }}>
+            <div style={{ flex: 1, paddingTop: '16px', backgroundColor: '#ffffff;' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '20px' }}>
                     <div></div>
                     <div>

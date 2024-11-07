@@ -1,5 +1,20 @@
 import React, { useState, useEffect } from 'react';
-import { Button, InputAdornment, Stack, TextField, Popover, RadioGroup, FormControlLabel, Radio, Divider, IconButton, Menu, MenuItem, ListItemIcon, ListItemText } from '@mui/material';
+import {
+    Button,
+    InputAdornment,
+    Stack,
+    TextField,
+    Popover,
+    RadioGroup,
+    FormControlLabel,
+    Radio,
+    Divider,
+    IconButton,
+    Menu,
+    MenuItem,
+    ListItemIcon,
+    ListItemText,
+} from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
 import SearchIcon from '@mui/icons-material/Search';
 import FilterListIcon from '@mui/icons-material/FilterList';
@@ -11,52 +26,9 @@ import SettingsIcon from '@mui/icons-material/Settings';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { styled } from '@mui/system';
 import { useLocation } from 'react-router-dom';
-
-const ActionMenu = ({ row }) => {
-    const [anchorEl, setAnchorEl] = useState(null);
-    const open = Boolean(anchorEl);
-
-    const handleClick = (event) => {
-        setAnchorEl(event.currentTarget);
-    };
-
-    const handleClose = () => {
-        setAnchorEl(null);
-    };
-
-    return (
-        <>
-            <IconButton onClick={handleClick}>
-                <MoreVertIcon />
-            </IconButton>
-            <Menu
-                anchorEl={anchorEl}
-                open={open}
-                onClose={handleClose}
-                anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
-                transformOrigin={{ vertical: 'top', horizontal: 'center' }}
-            >
-                <MenuItem onClick={() => { handleClose(); console.log("Adjust Stock clicked for row:", row); }}>
-                    <ListItemIcon><InventoryIcon fontSize="small" /></ListItemIcon>
-                    <ListItemText primary="Adjust Stock" />
-                </MenuItem>
-                <MenuItem onClick={() => { handleClose(); console.log("Edit reorder point clicked for row:", row); }}>
-                    <ListItemIcon><SettingsIcon fontSize="small" /></ListItemIcon>
-                    <ListItemText primary="Edit reorder point" />
-                </MenuItem>
-                <MenuItem onClick={() => { handleClose(); console.log("Edit Alert settings clicked for row:", row); }}>
-                    <ListItemIcon><NotificationsActiveIcon fontSize="small" /></ListItemIcon>
-                    <ListItemText primary="Edit Alert settings" />
-                </MenuItem>
-                <Divider />
-                <MenuItem onClick={() => { handleClose(); console.log("Delete item clicked for row:", row); }} sx={{ color: 'red' }}>
-                    <ListItemIcon><DeleteIcon fontSize="small" color="error" /></ListItemIcon>
-                    <ListItemText primary="Delete item" />
-                </MenuItem>
-            </Menu>
-        </>
-    );
-};
+import AdjustStockSidebar from './adjuststocksidebar';
+import ReorderStockSidebar from './reordersidebar';
+import SetAlertSidebar from './setalertsidebar';
 
 const QuantityBadge = styled('div')(({ lowStock }) => ({
     display: 'flex',
@@ -122,22 +94,21 @@ const renderStatus = (params) => {
     );
 };
 
-function AllProducts() {
+const AllProducts = () => {
     const [rowData, setRowData] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
     const [filterAnchorEl, setFilterAnchorEl] = useState(null);
     const [sortAnchorEl, setSortAnchorEl] = useState(null);
     const [selectedCategory, setSelectedCategory] = useState('');
     const [sortOption, setSortOption] = useState('A to Z');
+    const [isAdjustStockOpen, setAdjustStockOpen] = useState(false);
+    const [selectedProduct, setSelectedProduct] = useState(null);
+    const [isReorderStockOpen, setReorderStockOpen] = useState(false); // State for ReorderStockSidebar
+    const [isSetAlertOrderOpen, setSetAlertOrderOpen] = useState(false); // State for ReorderStockSidebar
     const location = useLocation();
 
-    useEffect(() => {
-        const queryParams = new URLSearchParams(location.search);
-        const category = queryParams.get('category');
-        setSelectedCategory(category || '');
-    }, [location.search]);
-
-    useEffect(() => {
+    // Fetch data function to be used both in useEffect and after saving stock adjustment
+    const fetchData = () => {
         const categoryQuery = selectedCategory ? `?category=${selectedCategory}` : '';
         fetch(`https://inv-be.vercel.app/v1/inventory${categoryQuery}`)
             .then(res => res.json())
@@ -148,6 +119,16 @@ function AllProducts() {
                 setRowData(data);
             })
             .catch(err => console.log(err));
+    };
+
+    useEffect(() => {
+        const queryParams = new URLSearchParams(location.search);
+        const category = queryParams.get('category');
+        setSelectedCategory(category || '');
+    }, [location.search]);
+
+    useEffect(() => {
+        fetchData();
     }, [selectedCategory]);
 
     const sortData = (data, option) => {
@@ -182,6 +163,76 @@ function AllProducts() {
         handleFilterClose();
     };
 
+    const handleAdjustStockOpen = (product) => {
+        setSelectedProduct(product);
+        setAdjustStockOpen(true);
+    };
+
+    const handleAdjustStockClose = () => {
+        setAdjustStockOpen(false);
+        setSelectedProduct(null);
+    };
+
+    const handleReorderStockOpen = (product) => {
+        setSelectedProduct(product);
+        setReorderStockOpen(true);
+    };
+
+    const handleReorderStockClose = () => {
+        setReorderStockOpen(false);
+        setSelectedProduct(null);
+    };
+
+    const handleSetAlertOrderOpen = (product) => {
+        setSelectedProduct(product);
+        setSetAlertOrderOpen(true);
+    };
+
+    const handleSetAlertOrderClose = () => {
+        setSetAlertOrderOpen(false);
+        setSelectedProduct(null);
+    };
+
+    const handleSaveStockAdjustment = async (quantity, reason, currentStock) => {
+        const apiUrl = `https://inv-be.vercel.app/v1/inventory/sku/${selectedProduct.sku}/update-stock`;
+        try {
+            const response = await fetch(apiUrl, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    change: quantity,
+                    updatedBy: "admin",
+                    reason: reason
+                })
+            });
+            await response.json();
+            fetchData(); // Recall fetchData to get updated data after adjustment
+        } catch (error) {
+            console.error("Error updating stock:", error);
+        }
+    };
+
+    const deleteProductsBySku = async (sku) => {
+        const apiUrl = `https://inv-be.vercel.app/v1/inventory/sku/${sku.sku}/change-status`;
+        try {
+            const response = await fetch(apiUrl, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    "status": false
+                })
+            });
+            await response.json();
+            fetchData(); 
+        } catch (error) {
+            console.error("Error updating stock:", error);
+        }
+    };
+
     const sortedData = sortData(rowData, sortOption);
 
     const filteredData = sortedData.filter((row) =>
@@ -197,6 +248,52 @@ function AllProducts() {
         { field: 'status', headerName: 'Status', flex: 0.5, renderCell: renderStatus },
         { field: 'action', headerName: 'Action', flex: 0.3, renderCell: (params) => <ActionMenu row={params.row} /> }
     ];
+
+    const ActionMenu = ({ row }) => {
+        const [anchorEl, setAnchorEl] = useState(null);
+        const open = Boolean(anchorEl);
+
+        const handleClick = (event) => {
+            setAnchorEl(event.currentTarget);
+        };
+
+        const handleClose = () => {
+            setAnchorEl(null);
+        };
+
+        return (
+            <>
+                <IconButton onClick={handleClick}>
+                    <MoreVertIcon />
+                </IconButton>
+                <Menu
+                    anchorEl={anchorEl}
+                    open={open}
+                    onClose={handleClose}
+                    anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+                    transformOrigin={{ vertical: 'top', horizontal: 'center' }}
+                >
+                    <MenuItem onClick={() => { handleClose(); handleAdjustStockOpen(row); }}>
+                        <ListItemIcon><InventoryIcon fontSize="small" /></ListItemIcon>
+                        <ListItemText primary="Adjust Stock" />
+                    </MenuItem>
+                    <MenuItem onClick={() => { handleClose(); handleReorderStockOpen(row); }}> {/* Call ReorderStockSidebar */}
+                        <ListItemIcon><SettingsIcon fontSize="small" /></ListItemIcon>
+                        <ListItemText primary="Edit reorder point" />
+                    </MenuItem>
+                    <MenuItem onClick={() => { handleClose(); handleSetAlertOrderOpen(row); }}>
+                        <ListItemIcon><NotificationsActiveIcon fontSize="small" /></ListItemIcon>
+                        <ListItemText primary="Edit Alert settings" />
+                    </MenuItem>
+                    <Divider />
+                    <MenuItem onClick={() => { handleClose(); deleteProductsBySku(row); }} sx={{ color: 'red' }}>
+                        <ListItemIcon><DeleteIcon fontSize="small" color="error" /></ListItemIcon>
+                        <ListItemText primary="Delete item" />
+                    </MenuItem>
+                </Menu>
+            </>
+        );
+    };
 
     return (
         <>
@@ -282,8 +379,27 @@ function AllProducts() {
                     rowHeight={50}
                 />
             </div>
+
+            <AdjustStockSidebar
+                open={isAdjustStockOpen}
+                onClose={handleAdjustStockClose}
+                currentStock={selectedProduct?.stock || 0}
+                onSave={handleSaveStockAdjustment}
+            />
+
+            <ReorderStockSidebar // Add the ReorderStockSidebar component
+                open={isReorderStockOpen}
+                onClose={handleReorderStockClose}
+                sku={selectedProduct?.sku}
+            />
+
+            <SetAlertSidebar // Add the ReorderStockSidebar component
+                open={isSetAlertOrderOpen}
+                onClose={handleSetAlertOrderClose}
+                sku={selectedProduct?.sku}
+            />
         </>
     );
-}
+};
 
 export default AllProducts;
