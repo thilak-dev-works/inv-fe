@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { PieChart, pieArcLabelClasses } from '@mui/x-charts/PieChart';
 
-const normalize = (v, v2) => Number.parseFloat(((v * v2) / 100).toFixed(2));
+// const normalize = (v, v2) => Number.parseFloat(((v * v2) / 100).toFixed(2));
 
-const valueFormatter = (item) => `${item.value}%`;
+// const valueFormatter = (item) => `${item.value}%`;
 
 export default function PieChartFlow({ chartdata = [] }) {  // Set default value for data
   const totalValue = chartdata?.reduce((sum, item) => sum + item.value, 0);
