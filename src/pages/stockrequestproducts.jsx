@@ -63,7 +63,7 @@ function StockRequestProducts() {
     const [sortOption, setSortOption] = useState('A to Z');
 
     useEffect(() => {
-        fetch("http://localhost:8000/v1/inventory/inventory-with-requests")
+        fetch("https://inv-be.vercel.app/v1/inventory/inventory-with-requests")
             .then(res => res.json())
             .then(data => setData(data))
             .catch(error => console.error("Error fetching data:", error));

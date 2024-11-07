@@ -30,7 +30,7 @@ function DeletedProducts(props) {
     const [sortOption, setSortOption] = useState('A to Z');
 
     useEffect(() => {
-        fetch("http://localhost:8000/v1/inventory?status=false")
+        fetch("https://inv-be.vercel.app/v1/inventory?status=false")
             .then(async (res) => {
                 let data = await res.json();
                 data.forEach((element) => {

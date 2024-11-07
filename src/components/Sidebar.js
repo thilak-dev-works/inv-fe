@@ -17,11 +17,17 @@ const Sidebar = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [isAllProductsOpen, setAllProductsOpen] = useState(false);
+  const [isAllReportsOpen, setAllReportsOpen] = useState(false);
   const [selectedSubMenu, setSelectedSubMenu] = useState('Gemstones');
 
   const toggleAllProducts = () => {
     navigate(`/allproducts`)
     setAllProductsOpen(!isAllProductsOpen);
+  };
+
+  const toggleAllReports = () => {
+    // navigate(`/allproducts`)
+    setAllReportsOpen(!isAllReportsOpen);
   };
 
   const handleSubMenuClick = (category) => {
@@ -114,14 +120,14 @@ const Sidebar = () => {
             <DeleteIcon sx={{ marginRight: '8px', fontSize: '20px' }} />
             Deleted Products
           </li>
-          <li className="expandable" onClick={toggleAllProducts}>
+          <li className="expandable" onClick={toggleAllReports}>
             <div style={{ display: 'flex', alignItems: 'center' }}>
               <ReportIcon sx={{ marginRight: '8px', fontSize: '20px' }} />
               Reports
-              {isAllProductsOpen ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+              {isAllReportsOpen ? <ExpandLessIcon /> : <ExpandMoreIcon />}
             </div>
           </li>
-          <Collapse in={isAllProductsOpen} timeout="auto" unmountOnExit>
+          <Collapse in={isAllReportsOpen} timeout="auto" unmountOnExit>
             <ul className="submenu">
               <li
                 className={selectedSubMenu === 'Replenishment' ? 'submenu-item active' : 'submenu-item'}

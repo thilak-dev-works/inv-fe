@@ -66,7 +66,7 @@ function StockAdjustmentsProducts(props) {
     const [sortOption, setSortOption] = useState('A to Z');
 
     useEffect(() => {
-        fetch("http://localhost:8000/v1/inventory/stock-history")
+        fetch("https://inv-be.vercel.app/v1/inventory/stock-history")
             .then(async (res) => {
                 let data = await res.json();
                 data.forEach((element) => {

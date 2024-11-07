@@ -139,7 +139,7 @@ function AllProducts() {
 
     useEffect(() => {
         const categoryQuery = selectedCategory ? `?category=${selectedCategory}` : '';
-        fetch(`http://localhost:8000/v1/inventory${categoryQuery}`)
+        fetch(`https://inv-be.vercel.app/v1/inventory${categoryQuery}`)
             .then(res => res.json())
             .then(data => {
                 data.forEach(element => {
