@@ -1,17 +1,45 @@
-import { Button, Stack } from "@mui/material";
+/* eslint-disable react-hooks/exhaustive-deps */
+import { Button, Stack, Snackbar, Alert } from "@mui/material";
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
-// import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import Papa from 'papaparse';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { DataGrid } from '@mui/x-data-grid';
+import { eventEmitter } from '../components/event';
 
 
-
-export default function ImportModule(props) {
-    // const navigate = useNavigate();
+export default function ImportModule() {
+    const navigate = useNavigate();
     const [data, setData] = useState([]);
-    const [fileImported, setFileImported] = useState(false); // State to track file import
-    const [selectedRows, setSelectedRows] = useState([]); // State to track selected rows
+    const [fileImported, setFileImported] = useState(false);
+    const [selectedRows, setSelectedRows] = useState([]);
+    const [openSnackbar, setOpenSnackbar] = useState(false);
+
+    useEffect(() => {
+        const handleSaveAndContinue = (event) => {
+            if (event.detail.message.includes('Save & Continue')) {
+                if (data.length > 0) {
+                    uploadSelectedRowsAsJSON();
+                    setTimeout(() => {
+                        navigate("/");
+                    }, 5000);
+                } else {
+                    console.error("No data available to upload.");
+                }
+            }
+        };
+
+        eventEmitter.addEventListener("saveAndContinue", handleSaveAndContinue);
+        return () => {
+            eventEmitter.removeEventListener("saveAndContinue", handleSaveAndContinue);
+        };
+    }, [data]);
+
+    useEffect(() => {
+        if (data.length > 0) {
+            console.log("Data ready for upload:", data);
+        }
+    }, [data]);
 
     const handleImportClick = (event) => {
         const file = event.target.files[0];
@@ -20,11 +48,18 @@ export default function ImportModule(props) {
                 header: true,
                 skipEmptyLines: true,
                 complete: (results) => {
-                    setData(results.data);
-                    // Preselect all rows based on SKU
-                    const allRowIds = results.data.map(row => row['SKU']);
-                    setSelectedRows(allRowIds);
-                    setFileImported(true); // Set to true when file is imported
+                    console.log("Parsed results:", results);
+                    if (results.data && results.data.length > 0) {
+                        setData(results.data);
+                        console.log("Parsed data:", data);
+
+                        const allRowIds = results.data.map(row => row['SKU']);
+                        setSelectedRows(allRowIds);
+                        setFileImported(true);
+                    } else {
+                        console.error("No data found in the file.");
+                        setFileImported(false);
+                    }
                 },
                 error: (error) => {
                     console.error("Error parsing CSV:", error);
@@ -34,11 +69,46 @@ export default function ImportModule(props) {
     };
 
     const handleDownloadClick = () => {
-        // Your download logic here
-        console.log("Download sample CSV functionality is not implemented yet.");
+        const link = document.createElement('a');
+        link.href = `${process.env.PUBLIC_URL}/sample.csv`; 
+        link.download = 'sample.csv';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
     };
 
-    // Define columns for the DataGrid
+    const uploadSelectedRowsAsJSON = () => {
+        const selectedData = data
+            // .filter(row => selectedRows.includes(row['SKU']))
+            .map(row => ({ SKU: row['SKU'], Quantity: row['Quantity'] }));
+
+        fetch("https://inv-be.vercel.app/v1/inventory/json/update-stock", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(selectedData),
+        })
+            .then(response => {
+                if (response.ok) {
+                    console.log("JSON upload successful");
+                    setOpenSnackbar(true);
+                } else {
+                    console.error("JSON upload failed");
+                }
+            })
+            .catch(error => {
+                console.error("Error uploading JSON:", error);
+            });
+    };
+
+    const handleSnackbarClose = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+        setOpenSnackbar(false);
+    };
+
     const columns = [
         { field: 'Product name', headerName: 'Product Name', flex: 1 },
         { field: 'Category', headerName: 'Category', flex: 1 },
@@ -55,7 +125,7 @@ export default function ImportModule(props) {
                     alignItems: "center",
                     marginTop: !fileImported ? 25 : 5,
                 }} >
-                {!fileImported && ( // Show import buttons only if no file is imported
+                {!fileImported && (
                     <>
                         <Button color="primary" variant="contained" startIcon={<AddCircleOutlineIcon />} component="label">
                             Import Products
@@ -65,7 +135,6 @@ export default function ImportModule(props) {
                     </>
                 )}
 
-                {/* Display the DataGrid if data exists */}
                 {data.length > 0 && (
                     <div style={{ height: 600, width: '100%', marginTop: 20 }}>
                         <DataGrid
@@ -74,15 +143,25 @@ export default function ImportModule(props) {
                             pageSize={5}
                             rowsPerPageOptions={[5, 10, 20]}
                             checkboxSelection
-                            getRowId={(row) => row['SKU']} // Use SKU as the unique identifier
-                            selectionModel={selectedRows} // Set the selection model
+                            getRowId={(row) => row['SKU']}
+                            selectionModel={selectedRows}
                             onSelectionModelChange={(newSelection) => {
-                                setSelectedRows(newSelection); // Update selected rows when selection changes
+                                setSelectedRows(newSelection);
                             }}
                         />
                     </div>
                 )}
             </Stack>
+            <Snackbar
+                open={openSnackbar}
+                autoHideDuration={3000}
+                onClose={handleSnackbarClose}
+                anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+            >
+                <Alert onClose={handleSnackbarClose} severity="success" sx={{ width: '100%' }}>
+                    Updated successfully!
+                </Alert>
+            </Snackbar>
         </div>
     );
 }

@@ -4,6 +4,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { Button } from "@mui/material";
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
+import { eventEmitter } from './event';
 
 let Layout = ({ children }) => {
     const navigate = useNavigate();
@@ -53,10 +54,16 @@ let Layout = ({ children }) => {
     };
 
     const { title: headerTitle, subtitle: headerSubtitle } = getHeaderContent(location.pathname);
-
-    // Define button and additional content outside of the return statement
     let headerAction = null;
-    //let additionalContent = null;
+    const handleSaveAndContinueClick = () => {
+        eventEmitter.dispatchEvent(new CustomEvent("saveAndContinue", {
+            detail: { message: "Save & Continue clicked in Layout" }
+        }));
+    };
+
+    const handleCancelClick = () => {
+        navigate("/")
+    };
 
     if (location.pathname === "/import") {
         headerAction = (
@@ -64,10 +71,10 @@ let Layout = ({ children }) => {
                 <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '20px' }}>
                     <div></div>
                     <div>
-                        <Button variant="outlined" color="primary" style={{ marginRight: '10px' }}>
+                        <Button variant="outlined" color="primary" style={{ marginRight: '10px' }} onClick={handleCancelClick}>
                             Cancel
                         </Button>
-                        <Button variant="contained" color="primary">
+                        <Button variant="contained" color="primary" onClick={handleSaveAndContinueClick}>
                             Save & Continue
                         </Button>
                     </div>
