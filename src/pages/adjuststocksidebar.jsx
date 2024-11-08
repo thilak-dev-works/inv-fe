@@ -258,6 +258,7 @@ const AdjustStockSidebar = ({ open, onClose, currentStock, onSave }) => {
                     onSave(quantity, reason, currentStock);
                     onClose();
                 }}
+                disabled={!date || !reason} // Disable Save button if date or reason is empty
             >
                 Save
             </Button>
