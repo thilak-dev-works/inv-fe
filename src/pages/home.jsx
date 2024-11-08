@@ -4,7 +4,6 @@ import titleicon3 from "../assets/pageimages/titleicon3.png";
 import InventorySummary from "../components/basicTable";
 import PieChartFlow from '../components/piechart';
 import TitleBoard from '../components/titleBoard';
-import AllProducts from './allproducts';
 import LowStockProducts from "./lowstockproducts";
 
 const desktopOS = [
