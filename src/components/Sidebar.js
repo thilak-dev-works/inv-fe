@@ -140,7 +140,7 @@ const Sidebar = () => {
               </li>
               <li
                 className={selectedSubMenu === 'Top 20 to Replenish' ? 'submenu-item active' : 'submenu-item'}
-                onClick={() => handleSubMenuClick('Top 20 to Replenish','/reports?category=')}
+                onClick={() => handleSubMenuClick('Top20toReplenish','/reports?category=')}
               >
                 Top 20 to Replenish
               </li>
@@ -152,7 +152,7 @@ const Sidebar = () => {
               </li>
               <li
                 className={selectedSubMenu === 'ABC Analysis' ? 'submenu-item active' : 'submenu-item'}
-                onClick={() => handleSubMenuClick('ABC Analysis','/reports?category=')}
+                onClick={() => handleSubMenuClick('ABCAnalysis','/reports?category=')}
               >
                 ABC Analysis
               </li>
