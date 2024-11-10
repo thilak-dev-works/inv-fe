@@ -30,9 +30,9 @@ const Sidebar = () => {
     setAllReportsOpen(!isAllReportsOpen);
   };
 
-  const handleSubMenuClick = (category) => {
+  const handleSubMenuClick = (category,pathurl) => {
     setSelectedSubMenu(category);
-    navigate(`/allproducts?category=${category}`);
+    navigate(`${pathurl}${category}`);
   };
 
   return (
@@ -77,31 +77,31 @@ const Sidebar = () => {
             <ul className="submenu">
               <li
                 className={selectedSubMenu === 'Gemstones' ? 'submenu-item active' : 'submenu-item'}
-                onClick={() => handleSubMenuClick('Gemstones')}
+                onClick={() => handleSubMenuClick('Gemstones','/allproducts?category=')}
               >
                 Gemstones
               </li>
               <li
                 className={selectedSubMenu === 'Jewelry' ? 'submenu-item active' : 'submenu-item'}
-                onClick={() => handleSubMenuClick('Jewelry')}
+                onClick={() => handleSubMenuClick('Jewelry','/allproducts?category=')}
               >
                 Jewelry
               </li>
               <li
                 className={selectedSubMenu === 'Drops & Beads' ? 'submenu-item active' : 'submenu-item'}
-                onClick={() => handleSubMenuClick('DropsBeads')}
+                onClick={() => handleSubMenuClick('DropsBeads','/allproducts?category=')}
               >
                 Drops & Beads
               </li>
               <li
                 className={selectedSubMenu === 'Semi-Mounts' ? 'submenu-item active' : 'submenu-item'}
-                onClick={() => handleSubMenuClick('Semimounts')}
+                onClick={() => handleSubMenuClick('Semimounts','/allproducts?category=')}
               >
                 Semi-Mounts
               </li>
               <li
                 className={selectedSubMenu === 'Findings' ? 'submenu-item active' : 'submenu-item'}
-                onClick={() => handleSubMenuClick('Findings')}
+                onClick={() => handleSubMenuClick('Findings','/allproducts?category=')}
               >
                 Findings
               </li>
@@ -134,25 +134,25 @@ const Sidebar = () => {
             <ul className="submenu">
               <li
                 className={selectedSubMenu === 'Replenishment' ? 'submenu-item active' : 'submenu-item'}
-                onClick={() => handleSubMenuClick('Replenishment')}
+                onClick={() => handleSubMenuClick('Replenishment','/reports?category=')}
               >
                 Replenishment
               </li>
               <li
                 className={selectedSubMenu === 'Top 20 to Replenish' ? 'submenu-item active' : 'submenu-item'}
-                onClick={() => handleSubMenuClick('Top 20 to Replenish')}
+                onClick={() => handleSubMenuClick('Top 20 to Replenish','/reports?category=')}
               >
                 Top 20 to Replenish
               </li>
               <li
                 className={selectedSubMenu === 'Overstock' ? 'submenu-item active' : 'submenu-item'}
-                onClick={() => handleSubMenuClick('Overstock')}
+                onClick={() => handleSubMenuClick('Overstock','/reports?category=')}
               >
                 Overstock
               </li>
               <li
                 className={selectedSubMenu === 'ABC Analysis' ? 'submenu-item active' : 'submenu-item'}
-                onClick={() => handleSubMenuClick('ABC Analysis')}
+                onClick={() => handleSubMenuClick('ABC Analysis','/reports?category=')}
               >
                 ABC Analysis
               </li>

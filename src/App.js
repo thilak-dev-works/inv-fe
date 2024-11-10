@@ -14,6 +14,7 @@ import SoldOutProducts from './pages/soldoutproducts';
 import StockAdjustmentsProducts from './pages/stockadjustmentsproducts';
 import StockRequestProducts from './pages/stockrequestproducts';
 import AdjustStockSidebar from './pages/adjuststocksidebar';
+import Reports from './pages/reports';
 
 function App() {
   return (
@@ -30,6 +31,7 @@ function App() {
           <Route path='/adjuststocksidebar' element={<AdjustStockSidebar />} />
           <Route path='/import' element={<ImportModule />} />
           <Route path='/importpage' element={<ImportPage />} />
+          <Route path='/reports' element={<Reports/>} />
         </Routes>
       </Layout>
     </Router>
