@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import DataGridTable from '../components/datagridTable';
 import { Button } from '@mui/material';
 
@@ -22,7 +22,7 @@ const columns = [
     }
 ];
 
-const rowData = [
+const rowSampleData = [
     { _id: 1, name: 'Product A', reason: 'New Stock', stock: 50, change: 5, date: '2024-01-01', updatedBy: 'admin', status: true, images: ['https://cdn.dummyjson.com/products/images/beauty/Essence%20Mascara%20Lash%20Princess/1.png'] },
     { _id: 2, name: 'Product B', reason: 'Restocked', stock: 30, change: -10, date: '2024-02-15', updatedBy: 'admin', status: false, images: ['https://cdn.dummyjson.com/products/images/beauty/Essence%20Mascara%20Lash%20Princess/1.png'] },
     { _id: 3, name: 'Product C', reason: 'Damaged', stock: 25, change: -5, date: '2024-03-20', updatedBy: 'admin', status: true, images: ['https://cdn.dummyjson.com/products/images/beauty/Essence%20Mascara%20Lash%20Princess/1.png'] },
@@ -52,7 +52,19 @@ const rowData = [
 ];
 
 function Reports() {
-    return <DataGridTable columns={columns} rowData={rowData} />;
+    const [rowData, setRowData] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
+
+    useEffect(() => {
+        // make an an API call
+        setTimeout(() => {
+            setRowData(rowSampleData);
+            setIsLoading(false);
+        }, 2000);
+    }, []);
+    return (
+        <DataGridTable columns={columns} rowData={rowData} isLoading={isLoading} />
+    )
 }
 
 export default Reports;

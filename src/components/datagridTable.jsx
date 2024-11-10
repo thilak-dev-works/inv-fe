@@ -18,7 +18,7 @@ import SortIcon from '@mui/icons-material/Sort';
 import AdjustStockSidebar from '../pages/adjuststocksidebar';
 import MuiPaginationComponent from './pagination';
 
-const DataGridTable = ({ columns, rowData }) => {
+const DataGridTable = ({ columns, rowData , isLoading }) => {
     const [searchTerm, setSearchTerm] = useState('');
     const [filterAnchorEl, setFilterAnchorEl] = useState(null);
     const [sortAnchorEl, setSortAnchorEl] = useState(null);
@@ -123,6 +123,7 @@ const DataGridTable = ({ columns, rowData }) => {
             <DataGrid
                 rows={paginatedData}
                 columns={columns}
+                loading={isLoading}
                 disablePagination
                 getRowId={(row) => row._id}
                 hideFooter
